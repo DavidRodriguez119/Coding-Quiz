@@ -19,6 +19,26 @@ h1 {
     padding: 2% 0;
 }
 
+nav {
+    position: absolute;
+    top: 40%;
+    left: 35px;
+    font-size: larger;
+    color: white;
+}
+
+nav:hover {
+    text-decoration: underline;
+}
+
+header p{
+    position: absolute;
+    top: 40%;
+    right: 35px;
+    font-size: larger;
+    color: white;
+}
+
 main {
     background-color: rgb(162, 162, 255);
     height: 85vh;
@@ -36,8 +56,9 @@ main {
     text-align: center;
 }
 
-p {
+main p {
     text-align: justify;
+    padding-bottom: 15px;
 }
 
 button {
@@ -53,10 +74,16 @@ button:hover {
     color: white;
 }
 
+button:active {
+    background-color: white;
+    color: #65271f;
+}
+
 h2 {
     color: darkblue;
     font-size: 30px;
     font-weight: bold;
     font-family: Bahnschrift, sans-serif;
     text-align: center;
+    padding-bottom: 15px;
 }

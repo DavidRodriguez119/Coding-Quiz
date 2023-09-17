@@ -87,3 +87,26 @@ h2 {
     text-align: center;
     padding-bottom: 15px;
 }
+
+ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+ul li {
+    list-style: none;
+    padding: 10px 15px;
+    margin: 10px;
+    border: 6px solid darkblue;
+    border-radius: 20px;
+    width: 200px;
+    background-color: rgb(205, 205, 205);
+    text-align: justify;
+}
+
+li:hover {
+    background-color: rgb(142, 142, 142);
+    font-weight: bold;
+}

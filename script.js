@@ -1,6 +1,8 @@
 // Variables & objects
-var highScoresLink = document.querySelector(`nav`)
-var contentSection = document.getElementById(`content`)
+var highScoresLink = document.querySelector(`nav`);
+var contentSection = document.getElementById(`content`);
+var initialTime = 90;
+var timerEL = document.querySelector(`#timer`);
 var quiz = [
     {
         question: `1. In which part of the HTML document should the JS <script> be added?`, 
@@ -34,6 +36,9 @@ function initialPage () {
     var initialH2 = document.createElement(`h2`);
     var instructions = document.createElement(`p`);
     var startBtn = document.createElement(`button`);
+
+    // Make sure the timer starts at 90s
+    initialTime = 90;
 
     // Add content and style to the initial elements
     initialH2.textContent = `Instructions`    
@@ -75,14 +80,14 @@ function displayQuiz (index) {
     quizUl.appendChild(quizLi4);
 
     // Run quiz using the quiz array index for each question   
-    quizH2.textContent = quiz[index].question 
-    quizLi1.textContent = quiz[index].op1
-    quizLi2.textContent = quiz[index].op2
-    quizLi3.textContent = quiz[index].op3
-    quizLi4.textContent = quiz[index].op4
+    quizH2.textContent = quiz[index].question;
+    quizLi1.textContent = quiz[index].op1;
+    quizLi2.textContent = quiz[index].op2;
+    quizLi3.textContent = quiz[index].op3;
+    quizLi4.textContent = quiz[index].op4;
 
     quizUl.addEventListener(`click`, function selectAnswer(event){     
-        var clickedElement = event.target
+        var clickedElement = event.target;
 
         if (clickedElement.tagName === `LI`){
             if (clickedElement.textContent === quiz[index].correctAnswer) {
@@ -96,28 +101,72 @@ function displayQuiz (index) {
             quizUl.removeEventListener(`click`, selectAnswer);
 
             setTimeout(function() {
-                contentSection.innerHTML = ``
+                contentSection.innerHTML = ``;
                 displayQuiz(index + 1);
             }, 1000);
         };
     });
 };
 
-// Event listener for when the Start button in created
+// Game Over screen
+function gameOver (){
+    // Empty current page content
+    contentSection.innerHTML = ``;
+
+    // Create GameOver page elements
+    var gameOverH2 = document.createElement(`h2`);
+    var resetButton = document.createElement(`button`)
+
+    // Add content to the elements
+    gameOverH2.textContent = `GAME OVER`
+    resetButton.textContent = `RESTART`
+
+    // Append Elements to Game Over Page
+    contentSection.appendChild(gameOverH2);
+    contentSection.appendChild(resetButton);
+}
+
+// start the timer when the START button is pressed
+function timer(){
+    var timeInterval = setInterval(function () {
+        timerEL.textContent = initialTime
+        initialTime--;
+
+        if (initialTime < 0) {
+            clearInterval(timeInterval);
+            gameOver();
+        };
+    }, 1000)
+};
+
+// Event listener for when the Start or reset buttons are pressed
 contentSection.addEventListener(`click`, function(event){
     var clickedElement = event.target
     if (clickedElement.tagName === `BUTTON`){
-        // remove the current html elements on the content section
-        contentSection.innerHTML = ``;
-        // Call the function that starts the quiz
-        displayQuiz(0);
+        if (clickedElement.textContent === `START`){
+            // start timer
+            timer();
+            // remove the current html elements on the content section
+            contentSection.innerHTML = ``;
+            // Call the function that starts the quiz
+            displayQuiz(0);
+        } else {
+            contentSection.innerHTML = ``;
+            initialPage();
+        };
     }
 });
 
-
 // Event listener for the High Scores link
 highScoresLink.addEventListener(`click`, function(event){
-    contentSection.innerHTML = ``;
+    if (event.target.textContent === `High Scores`) {
+        contentSection.innerHTML = ``;
+        highScoresLink.textContent = `Home`;
+        console.log(1);
+    } else if (event.target.textContent === `Home`){
+        initialPage(); 
+        highScoresLink.textContent = `High Scores`;
+    }
 });
 
 // When the page loads the do the following

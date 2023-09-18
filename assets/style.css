@@ -123,6 +123,10 @@ input {
     text-align: center;
 }
 
+#high-score {
+    display: none;
+}
+
 #end-page p{
     text-align: center;
 }

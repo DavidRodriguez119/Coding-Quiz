@@ -4,6 +4,15 @@ var contentSection = document.getElementById(`question`);
 var initialTime = 90;
 var timerEL = document.querySelector(`#timer`);
 var timeInterval;
+var endPage = document.getElementById(`end-page`);
+var saveBtn = document.getElementById(`save-button`);
+var userName = document.getElementById(`user-name`);
+var results = [];
+var stringifiedResults;
+var game = {
+    name: ``,
+    score: ``,
+};
 var quiz = [
     {
         question: `1. In which part of the HTML document should the JS <script> be added?`, 
@@ -116,10 +125,27 @@ function quizCompleted (){
     // Stop timer
     clearInterval(timeInterval);
 
-    var endPage = document.getElementById(`end-page`);
+    // Show content
     endPage.style.display = `block`
     document.getElementById("show-score").textContent = `Good job! Your score is ${initialTime} seconds.`;
 
+    // Event Listener for Save button
+    saveBtn.addEventListener(`click`, function(event){
+        event.preventDefault();
+        if (userName.value === ``){
+            alert(`Please enter your name if you want to save your score`);
+        } else {
+            // Save name and score into the game object
+            game.name = userName.value
+            game.score = initialTime
+            // Save the info of this quiz into the results array
+            results.push(game)
+            // Stringify the results array & save it into the local storage
+            stringifiedResults = JSON.stringify(results);
+            localStorage.setItem(`results`, stringifiedResults);
+            highScores ();
+        }
+    });
 };
 
 // Game Over screen
@@ -153,6 +179,22 @@ function timer(){
     }, 1000)
 };
 
+// High Scores page
+function highScores(){
+    // Clear content section then display the High-scores page
+    contentSection.innerHTML = ``;
+    document.getElementById(`high-score`).style.display = `block`
+    endPage.style.display = `none`
+    highScoresLink.textContent = `Home`;
+
+    // Retrieve from the local storage
+    var lastGameString = localStorage.getItem(`results`);
+    var lastGame = JSON.parse(lastGameString);
+    results.push(lastGame);
+    console.log(results);
+
+};
+
 // Event listener for when the Start or reset buttons are pressed
 contentSection.addEventListener(`click`, function(event){
     var clickedElement = event.target
@@ -165,7 +207,7 @@ contentSection.addEventListener(`click`, function(event){
             contentSection.innerHTML = ``;
             // Call the function that starts the quiz
             displayQuiz(0);
-        } else {
+        } else if (clickedElement.textContent === `RESTART`){
             contentSection.innerHTML = ``;
             initialPage();
         };
@@ -175,10 +217,9 @@ contentSection.addEventListener(`click`, function(event){
 // Event listener for the High Scores link
 highScoresLink.addEventListener(`click`, function(event){
     if (event.target.textContent === `High Scores`) {
-        contentSection.innerHTML = ``;
-        highScoresLink.textContent = `Home`;
-        console.log(1);
+        highScores();
     } else if (event.target.textContent === `Home`){
+        document.getElementById(`high-score`).style.display = `none`
         initialPage(); 
         highScoresLink.textContent = `High Scores`;
     }

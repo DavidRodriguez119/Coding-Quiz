@@ -1,8 +1,9 @@
 // Variables & objects
 var highScoresLink = document.querySelector(`nav`);
-var contentSection = document.getElementById(`content`);
+var contentSection = document.getElementById(`question`);
 var initialTime = 90;
 var timerEL = document.querySelector(`#timer`);
+var timeInterval;
 var quiz = [
     {
         question: `1. In which part of the HTML document should the JS <script> be added?`, 
@@ -44,7 +45,7 @@ function initialPage () {
     initialH2.textContent = `Instructions`    
     instructions.textContent = `Ready to start? You will face three different multiple choice questions
     about JavaScript. Your task is to solve the quiz as fast as you can. Every incorrect
-    answer will deduct 15 seconds of your time. Good luck!`;
+    answer will deduct 5 seconds of your time. Good luck!`;
     startBtn.textContent = `START`
     startBtn.classList.add(`startBtn`)
 
@@ -59,7 +60,8 @@ function displayQuiz (index) {
 
     // What happens when index is greater than the length of the quiz
     if (index >= quiz.length) {
-        contentSection.innerHTML = `<h2>QUIZ COMPLETED</h2>`;
+        
+        quizCompleted();
         return;
     }
 
@@ -96,6 +98,7 @@ function displayQuiz (index) {
             } else {
                 clickedElement.textContent = `INCORRECT :(`;
                 clickedElement.style.backgroundColor = `red`;
+                initialTime = initialTime - 5;
             }
 
             quizUl.removeEventListener(`click`, selectAnswer);
@@ -106,6 +109,17 @@ function displayQuiz (index) {
             }, 1000);
         };
     });
+};
+
+// QUiz completed page
+function quizCompleted (){
+    // Stop timer
+    clearInterval(timeInterval);
+
+    var endPage = document.getElementById(`end-page`);
+    endPage.style.display = `block`
+    document.getElementById("show-score").textContent = `Good job! Your score is ${initialTime} seconds.`;
+
 };
 
 // Game Over screen
@@ -128,11 +142,11 @@ function gameOver (){
 
 // start the timer when the START button is pressed
 function timer(){
-    var timeInterval = setInterval(function () {
-        timerEL.textContent = initialTime
+    timeInterval = setInterval(function () {
         initialTime--;
+        timerEL.textContent = initialTime
 
-        if (initialTime < 0) {
+        if (initialTime <= 0) {
             clearInterval(timeInterval);
             gameOver();
         };
@@ -144,6 +158,7 @@ contentSection.addEventListener(`click`, function(event){
     var clickedElement = event.target
     if (clickedElement.tagName === `BUTTON`){
         if (clickedElement.textContent === `START`){
+            timerEL.textContent = initialTime
             // start timer
             timer();
             // remove the current html elements on the content section

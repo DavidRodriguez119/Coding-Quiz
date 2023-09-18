@@ -54,6 +54,7 @@ main {
     top: 70px;
     background-color: white;
     text-align: center;
+    height: auto;
 }
 
 main p {
@@ -109,4 +110,19 @@ ul li {
 li:hover {
     background-color: rgb(142, 142, 142);
     font-weight: bold;
+}
+
+input {
+    padding: 15px;
+    margin: 15px;
+
+}
+
+#end-page{
+    display: none;
+    text-align: center;
+}
+
+#end-page p{
+    text-align: center;
 }

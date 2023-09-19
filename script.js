@@ -9,7 +9,6 @@ var saveBtn = document.getElementById(`save-button`);
 var userName = document.getElementById(`user-name`);
 var scoresOl = document.getElementById(`scores-ol`);
 var results = [];
-var stringifiedGame;
 var game = {
     name: ``,  
     score: ``
@@ -121,6 +120,42 @@ function displayQuiz (index) {
     });
 };
 
+// High Scores page
+function highScores() {
+    // Clear content section then display the High-scores page
+    contentSection.innerHTML = ``;
+    document.getElementById(`high-score`).style.display = `block`;
+    endPage.style.display = `none`;
+    highScoresLink.textContent = `Home`;
+  
+    // Check if there are values stored in local storage
+    var storedResults = JSON.parse(localStorage.getItem(`results`));
+    if (storedResults !== null) {
+      results = storedResults;
+    }
+  
+    // Add the current quiz results if they are not already present
+    // lines 138 to 141 where provided by the Xpert Learning Assistant after asking why the game values where being pushed more than once
+    if (game.name !== "" && !results.some(result => result.name === game.name)) {
+        results.push(game);
+    }
+
+    localStorage.setItem(`results`, JSON.stringify(results));
+  
+    // Sort the data
+    results.sort((a, b) => b.score - a.score);
+  
+    // Clear the previously added list items
+    scoresOl.innerHTML = '';
+  
+    // Create the ordered list items
+    for (var i = 0; i < results.length; i++) {
+      var scoreItem = document.createElement(`li`);
+      scoreItem.textContent = results[i].name + `: ` + results[i].score;
+      scoresOl.appendChild(scoreItem);
+    }
+};
+
 // QUiz completed page
 function quizCompleted (){
     // Stop timer
@@ -140,9 +175,6 @@ function quizCompleted (){
             game.name = userName.value
             game.score = initialTime
             
-            // Add this game's results to the results array
-            results.push(game);
-
             // Save the info of this quiz into the results array 
             highScores ();
         }
@@ -180,17 +212,6 @@ function timer(){
     }, 1000)
 };
 
-// High Scores page
-function highScores(){
-    // Clear content section then display the High-scores page
-    contentSection.innerHTML = ``;
-    document.getElementById(`high-score`).style.display = `block`
-    endPage.style.display = `none`
-    highScoresLink.textContent = `Home`;
-
-    
-};
-
 // Event listener for when the Start or reset buttons are pressed
 contentSection.addEventListener(`click`, function(event){
     var clickedElement = event.target
@@ -204,17 +225,30 @@ contentSection.addEventListener(`click`, function(event){
             // Call the function that starts the quiz
             displayQuiz(0);
         } else if (clickedElement.textContent === `RESTART`){
+            game.name = ``
+            game.score = ``
             contentSection.innerHTML = ``;
             initialPage();
         };
     }
 });
 
+// Event Listener for RESTART button
+document.querySelector(`#reset-button`).addEventListener(`click`, function(event){
+    game.name = ``
+    game.score = ``
+    document.getElementById(`high-score`).style.display = `none`
+    initialPage(); 
+    highScoresLink.textContent = `High Scores`;
+})
+
 // Event listener for the High Scores link
 highScoresLink.addEventListener(`click`, function(event){
     if (event.target.textContent === `High Scores`) {
         highScores();
     } else if (event.target.textContent === `Home`){
+        game.name = ``
+        game.score = ``
         document.getElementById(`high-score`).style.display = `none`
         initialPage(); 
         highScoresLink.textContent = `High Scores`;

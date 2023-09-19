@@ -7,11 +7,12 @@ var timeInterval;
 var endPage = document.getElementById(`end-page`);
 var saveBtn = document.getElementById(`save-button`);
 var userName = document.getElementById(`user-name`);
+var scoresOl = document.getElementById(`scores-ol`);
 var results = [];
-var stringifiedResults;
+var stringifiedGame;
 var game = {
-    name: ``,
-    score: ``,
+    name: ``,  
+    score: ``
 };
 var quiz = [
     {
@@ -138,11 +139,11 @@ function quizCompleted (){
             // Save name and score into the game object
             game.name = userName.value
             game.score = initialTime
-            // Save the info of this quiz into the results array
-            results.push(game)
-            // Stringify the results array & save it into the local storage
-            stringifiedResults = JSON.stringify(results);
-            localStorage.setItem(`results`, stringifiedResults);
+            
+            // Add this game's results to the results array
+            results.push(game);
+
+            // Save the info of this quiz into the results array 
             highScores ();
         }
     });
@@ -187,12 +188,7 @@ function highScores(){
     endPage.style.display = `none`
     highScoresLink.textContent = `Home`;
 
-    // Retrieve from the local storage
-    var lastGameString = localStorage.getItem(`results`);
-    var lastGame = JSON.parse(lastGameString);
-    results.push(lastGame);
-    console.log(results);
-
+    
 };
 
 // Event listener for when the Start or reset buttons are pressed

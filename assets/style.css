@@ -130,3 +130,14 @@ input {
 #end-page p{
     text-align: center;
 }
+
+#scores-ol{
+    text-align: center;
+    position: relative;
+    left: 45%;
+    padding: 15px;
+}
+
+#scores-ol li{
+    width: fit-content;
+}
